@@ -1,0 +1,6 @@
+{
+  "name": "Front-Desk AI",
+  "description": "AI Receptionist CRM and Smart Front-Desk Dashboard for small businesses and offices.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
