@@ -44,6 +44,7 @@ class FrontDeskViewModel(application: Application) : AndroidViewModel(applicatio
     var isSimulatingCall by mutableStateOf(false)
     var aiRecommendations by mutableStateOf("👉 Add receptionist coverage from 10 AM–1 PM due to peak lease inquiries.\n👉 Proactively send parking validation instructions to scheduled guests.")
     var isLoadingRecommendations by mutableStateOf(false)
+    var isLuxuryThemeActive by mutableStateOf(true)
 
     // --- Add Operations Dialog/Expanded States ---
     var showAddMeetingDialog by mutableStateOf(false)

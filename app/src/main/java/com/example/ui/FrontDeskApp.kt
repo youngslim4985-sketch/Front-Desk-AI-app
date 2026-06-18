@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.zIndex
+import androidx.compose.ui.text.font.FontFamily
+import com.example.ui.theme.Montserrat
+import com.example.ui.theme.CormorantGaramond
+import com.example.ui.theme.BebasNeue
+import com.example.ui.theme.EmpireGold
+import com.example.ui.theme.ObsidianBlack
+import com.example.ui.theme.ObsidianCard
+import com.example.ui.theme.SandPlated
+import com.example.ui.theme.ObsidianMutedText
 import com.example.data.Booking
 import com.example.data.CallLog
 import com.example.data.Faq
@@ -54,71 +66,80 @@ enum class Screen(val title: String) {
 fun FrontDeskApp(viewModel: FrontDeskViewModel) {
     var currentScreen by remember { mutableStateOf(Screen.Dashboard) }
 
-    // Scaffold holding screen navigation
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("app_scaffold"),
-        bottomBar = {
-            NavigationBar(
-                tonalElevation = 8.dp,
-                windowInsets = WindowInsets.navigationBars
-            ) {
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Dashboard,
-                    onClick = { currentScreen = Screen.Dashboard },
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Dashboard") },
-                    label = { Text("Dashboard", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Calls,
-                    onClick = { currentScreen = Screen.Calls },
-                    icon = { Icon(Icons.Default.Call, contentDescription = "Calls") },
-                    label = { Text("Calls", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Meetings,
-                    onClick = { currentScreen = Screen.Meetings },
-                    icon = { Icon(Icons.Default.List, contentDescription = "Meetings") },
-                    label = { Text("Meetings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Bookings,
-                    onClick = { currentScreen = Screen.Bookings },
-                    icon = { Icon(Icons.Default.Edit, contentDescription = "Bookings") },
-                    label = { Text("Bookings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Analytics,
-                    onClick = { currentScreen = Screen.Analytics },
-                    icon = { Icon(Icons.Default.Info, contentDescription = "Analytics") },
-                    label = { Text("Analytics", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == Screen.Settings,
-                    onClick = { currentScreen = Screen.Settings },
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                    label = { Text("Settings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                )
-            }
-        },
-        contentWindowInsets = WindowInsets.safeDrawing
-    ) { paddingValues ->
-        Box(
+    val appContent = @Composable {
+        Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues)
-        ) {
-            when (currentScreen) {
-                Screen.Dashboard -> DashboardScreen(viewModel)
-                Screen.Calls -> CallsScreen(viewModel)
-                Screen.Meetings -> MeetingsScreen(viewModel)
-                Screen.Bookings -> BookingsScreen(viewModel)
-                Screen.Analytics -> AnalyticsScreen(viewModel)
-                Screen.Settings -> SettingsScreen(viewModel)
+                .testTag("app_scaffold"),
+            bottomBar = {
+                NavigationBar(
+                    tonalElevation = 8.dp,
+                    windowInsets = WindowInsets.navigationBars
+                ) {
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Dashboard,
+                        onClick = { currentScreen = Screen.Dashboard },
+                        icon = { Icon(Icons.Default.Home, contentDescription = "Dashboard") },
+                        label = { Text("Dashboard", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Calls,
+                        onClick = { currentScreen = Screen.Calls },
+                        icon = { Icon(Icons.Default.Call, contentDescription = "Calls") },
+                        label = { Text("Calls", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Meetings,
+                        onClick = { currentScreen = Screen.Meetings },
+                        icon = { Icon(Icons.Default.List, contentDescription = "Meetings") },
+                        label = { Text("Meetings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Bookings,
+                        onClick = { currentScreen = Screen.Bookings },
+                        icon = { Icon(Icons.Default.Edit, contentDescription = "Bookings") },
+                        label = { Text("Bookings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Analytics,
+                        onClick = { currentScreen = Screen.Analytics },
+                        icon = { Icon(Icons.Default.Star, contentDescription = "T&F HyperDeck") },
+                        label = { Text("T&F HyperDeck", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                    NavigationBarItem(
+                        selected = currentScreen == Screen.Settings,
+                        onClick = { currentScreen = Screen.Settings },
+                        icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
+                        label = { Text("Settings", maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    )
+                }
+            },
+            contentWindowInsets = WindowInsets.safeDrawing
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(paddingValues)
+            ) {
+                when (currentScreen) {
+                    Screen.Dashboard -> DashboardScreen(viewModel)
+                    Screen.Calls -> CallsScreen(viewModel)
+                    Screen.Meetings -> MeetingsScreen(viewModel)
+                    Screen.Bookings -> BookingsScreen(viewModel)
+                    Screen.Analytics -> AnalyticsScreen(viewModel)
+                    Screen.Settings -> SettingsScreen(viewModel)
+                }
             }
         }
+    }
+
+    if (viewModel.isLuxuryThemeActive) {
+        TFAugmentedTheme {
+            appContent()
+        }
+    } else {
+        appContent()
     }
 }
 
@@ -156,6 +177,104 @@ fun DashboardScreen(viewModel: FrontDeskViewModel) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+        }
+
+        // Luxurious $12,480 Revenue Recovered Banner
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("dashboard_revenue_banner"),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isLuxuryThemeActive) ObsidianCard else MaterialTheme.colorScheme.surfaceVariant
+                ),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(
+                    1.5.dp,
+                    if (viewModel.isLuxuryThemeActive) EmpireGold.copy(alpha = 0.8f) else MaterialTheme.colorScheme.outline
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "T&F AUTOMATE CO-PILOT",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = if (viewModel.isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                            color = if (viewModel.isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.5.sp
+                        )
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(
+                                    if (viewModel.isLuxuryThemeActive) EmpireGold.copy(alpha = 0.12f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                        ) {
+                            Text(
+                                text = "LIVE OPERATIONS AUDIT",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = if (viewModel.isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                                color = if (viewModel.isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = "Total Revenue Recovered",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = if (viewModel.isLuxuryThemeActive) CormorantGaramond else FontFamily.Default,
+                        color = if (viewModel.isLuxuryThemeActive) SandPlated else MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Text(
+                            text = "$12,480",
+                            fontSize = 46.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = if (viewModel.isLuxuryThemeActive) BebasNeue else FontFamily.Default,
+                            color = if (viewModel.isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp,
+                            lineHeight = 44.sp
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "USD RECOVERED THIS WEEK",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = if (viewModel.isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                            color = if (viewModel.isLuxuryThemeActive) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Autonomous AI receptionist intercepted dropped inbound sales leads and locked in bookings instantly.",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = if (viewModel.isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (viewModel.isLuxuryThemeActive) SandPlated.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 
@@ -511,91 +630,119 @@ fun CallsScreen(viewModel: FrontDeskViewModel) {
     val callLogs by viewModel.callLogs.collectAsStateWithLifecycle()
     var inlineSimName by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+    var activeDrawerLog by remember { mutableStateOf<CallLog?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Calls Log & CRM",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "A complete history of incoming call records summarized and tagged by AI.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Quick simulation bar
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-            shape = RoundedCornerShape(12.dp)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Text(
+                text = "Calls Log & CRM",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "A complete history of incoming call records summarized and tagged by AI.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Quick simulation bar
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                OutlinedTextField(
-                    value = inlineSimName,
-                    onValueChange = { inlineSimName = it },
-                    placeholder = { Text("Simulate caller Name") },
-                    singleLine = true,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CoolBlue,
-                        unfocusedBorderColor = Color.Transparent
-                    )
-                )
-                Button(
-                    onClick = {
-                        val nom = if (inlineSimName.isNotBlank()) inlineSimName else "Valued Client"
-                        viewModel.triggerSimulatedCall(nom)
-                        inlineSimName = ""
-                        focusManager.clearFocus()
-                    },
-                    modifier = Modifier.testTag("inline_sim_call_btn"),
-                    colors = ButtonDefaults.buttonColors(containerColor = CoolBlue),
-                    shape = RoundedCornerShape(8.dp),
-                    enabled = !viewModel.isSimulatingCall
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (viewModel.isSimulatingCall) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
-                    } else {
-                        Text("Simulate")
+                    OutlinedTextField(
+                        value = inlineSimName,
+                        onValueChange = { inlineSimName = it },
+                        placeholder = { Text("Simulate caller Name") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = CoolBlue,
+                            unfocusedBorderColor = Color.Transparent
+                        )
+                    )
+                    Button(
+                        onClick = {
+                            val nom = if (inlineSimName.isNotBlank()) inlineSimName else "Valued Client"
+                            viewModel.triggerSimulatedCall(nom)
+                            inlineSimName = ""
+                            focusManager.clearFocus()
+                        },
+                        modifier = Modifier.testTag("inline_sim_call_btn"),
+                        colors = ButtonDefaults.buttonColors(containerColor = CoolBlue),
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = !viewModel.isSimulatingCall
+                    ) {
+                        if (viewModel.isSimulatingCall) {
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
+                        } else {
+                            Text("Simulate")
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (callLogs.isEmpty()) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    EmptyStateCard(message = "Call list is temporarily empty. Use the simulator above to log calls instantly!")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(callLogs, key = { it.id }) { log ->
+                        CallLogDetailCard(
+                            log = log,
+                            onDelete = { viewModel.deleteCallLog(log.id) },
+                            onShowDrawer = { activeDrawerLog = log },
+                            isLuxuryThemeActive = viewModel.isLuxuryThemeActive
+                        )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        if (callLogs.isEmpty()) {
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                EmptyStateCard(message = "Call list is temporarily empty. Use the simulator above to log calls instantly!")
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+        // Overlaid AI Call Summary Drawer overlay
+        if (activeDrawerLog != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(20f)
             ) {
-                items(callLogs, key = { it.id }) { log ->
-                    CallLogDetailCard(log = log, onDelete = { viewModel.deleteCallLog(log.id) })
-                }
+                AICallSummaryDrawer(
+                    log = activeDrawerLog!!,
+                    isLuxuryMode = viewModel.isLuxuryThemeActive,
+                    onDismiss = { activeDrawerLog = null }
+                )
             }
         }
     }
 }
 
 @Composable
-fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
+fun CallLogDetailCard(
+    log: CallLog,
+    onDelete: () -> Unit,
+    onShowDrawer: () -> Unit,
+    isLuxuryThemeActive: Boolean
+) {
     var isExpanded by remember { mutableStateOf(false) }
     val sdf = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
     val timeStr = sdf.format(Date(log.timestamp))
@@ -604,10 +751,16 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .clickable { isExpanded = !isExpanded },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            .clickable { isExpanded = !isExpanded }
+            .testTag("call_log_card_${log.id}"),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isLuxuryThemeActive) ObsidianCard else MaterialTheme.colorScheme.surface
+        ),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
+        border = BorderStroke(
+            1.dp,
+            if (isLuxuryThemeActive) EmpireGold.copy(alpha = 0.35f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -622,10 +775,17 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(iconColor.copy(alpha = 0.12f)),
+                        .background(
+                            if (isLuxuryThemeActive) EmpireGold.copy(alpha = 0.12f) else iconColor.copy(alpha = 0.12f)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(20.dp))
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = if (isLuxuryThemeActive) EmpireGold else iconColor,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -634,12 +794,15 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                     Text(
                         text = log.visitorName,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = if (isLuxuryThemeActive) CormorantGaramond else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "${log.phoneNumber} • $timeStr",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -657,7 +820,8 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                 text = "Reason Call: ${log.reason}",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                color = if (isLuxuryThemeActive) SandPlated else MaterialTheme.colorScheme.onSurface
             )
 
             // Auto Tags
@@ -668,13 +832,21 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                                .background(
+                                    if (isLuxuryThemeActive) EmpireGold.copy(alpha = 0.08f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                                )
+                                .border(
+                                    1.dp,
+                                    if (isLuxuryThemeActive) EmpireGold.copy(alpha = 0.2f) else Color.Transparent,
+                                    RoundedCornerShape(6.dp)
+                                )
                                 .padding(horizontal = 8.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = tag.trim(),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                                color = if (isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -684,7 +856,7 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
             if (isExpanded) {
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 12.dp),
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                    color = if (isLuxuryThemeActive) EmpireGold.copy(alpha = 0.25f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                 )
 
                 // Detailed AI Insights Pane
@@ -698,7 +870,8 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                             text = "AI Conversation Insights",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = CoolBlue
+                            fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                            color = if (isLuxuryThemeActive) EmpireGold else CoolBlue
                         )
 
                         // Sentiment Chip
@@ -717,10 +890,11 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                             Text(
                                 text = "Sentiment: ${log.sentiment}",
                                 style = MaterialTheme.typography.labelSmall,
+                                fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
                                 color = when (log.sentiment.lowercase()) {
                                     "positive" -> EmeraldGreen
                                     "negative" -> CrimsonRed
-                                    else -> MaterialTheme.colorScheme.onSurface
+                                    else -> if (isLuxuryThemeActive) SandPlated else MaterialTheme.colorScheme.onSurface
                                 }
                             )
                         }
@@ -729,14 +903,16 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                     Text(
                         text = "Duration: ${log.durationSeconds}s",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Text(
                         text = log.summary,
                         style = MaterialTheme.typography.bodyMedium,
                         lineHeight = 20.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) SandPlated else MaterialTheme.colorScheme.onSurface
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -744,20 +920,49 @@ fun CallLogDetailCard(log: CallLog, onDelete: () -> Unit) {
                         text = "Follow up Recommendations:",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) EmpireGold else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = log.followUpText,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default,
+                        color = if (isLuxuryThemeActive) SandPlated.copy(alpha = 0.82f) else MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
+                    // BEAUTIFUL ULTRA DRAWER TOGGLE BUTTON
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(
+                        onClick = onShowDrawer,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isLuxuryThemeActive) EmpireGold else CoolBlue,
+                            contentColor = if (isLuxuryThemeActive) ObsidianBlack else Color.White
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("open_log_drawer_btn_${log.id}"),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Search details",
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "✨ VIEW AI AUDIO ANALYSIS & TRANSCRIPT",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = if (isLuxuryThemeActive) Montserrat else FontFamily.Default
+                        )
+                    }
                 }
             } else {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Tap to show AI Summaries & Insights...",
                     style = MaterialTheme.typography.bodySmall,
-                    color = CoolBlue,
+                    color = if (isLuxuryThemeActive) EmpireGold else CoolBlue,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1586,194 +1791,605 @@ fun AnalyticsScreen(viewModel: FrontDeskViewModel) {
     val meetings by viewModel.meetings.collectAsStateWithLifecycle()
     val bookings by viewModel.bookings.collectAsStateWithLifecycle()
 
-    LazyColumn(
+    var selectedTab by remember { mutableStateOf(0) } // 0: KPIs & Auditing, 1: AI Evolution Blueprint
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
+        // Shared Screen Header
+        Column {
             Text(
-                text = "Business Intelligence & KPIs",
+                text = "Business Intelligence & Strategy",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "AI receptionist performance statistics and prospective business operations leads.",
+                text = "Performance statistics and strategic roadmap for scaling front-desk operations.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
-        // Numerical KPIs
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
-                        .padding(12.dp)
-                ) {
-                    Text("Total Inbound Calls", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("${callLogs.size + 1280}", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = CoolBlue)
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
-                        .padding(12.dp)
-                ) {
-                    Text("Bookings Formed", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("${bookings.size + 610}", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = EmeraldGreen)
-                }
-            }
+        // Custom M3 Tab Row
+        TabRow(
+            selectedTabIndex = selectedTab,
+            containerColor = Color.Transparent,
+            contentColor = CoolBlue,
+            divider = { HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)) },
+            modifier = Modifier.fillMaxWidth().testTag("analytics_tab_row")
+        ) {
+            Tab(
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
+                text = { Text("KPI Metrics & Audit", fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                icon = { Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                modifier = Modifier.testTag("analytics_tab_metrics")
+            )
+            Tab(
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
+                text = { Text("AI Evolution Blueprint", fontWeight = FontWeight.Bold, fontSize = 13.sp) },
+                icon = { Icon(Icons.Default.Star, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                modifier = Modifier.testTag("analytics_tab_evolution")
+            )
         }
 
-        // Lead sources custom aesthetic bar chart (CSS/Compose Bar Style)
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
+        if (selectedTab == 0) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Lead Source Breakdown", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    LeadSourceBar(label = "Direct Call Inbound", percentage = 45, color = CoolBlue)
-                    LeadSourceBar(label = "Virtual AI Booking Chat", percentage = 30, color = EmeraldGreen)
-                    LeadSourceBar(label = "Walk-ins Welcome", percentage = 15, color = AmberOrange)
-                    LeadSourceBar(label = "Strategic Referrals", percentage = 10, color = SlateGray700)
-                }
-            }
-        }
-
-        // Intent breakdown card
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Visitor Intent Projections", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    IntentProgressRow(label = "Sales & Space Inquiries", count = 582, total = 1000, color = EmeraldGreen)
-                    IntentProgressRow(label = "Courier Deliveries", count = 302, total = 1000, color = CoolBlue)
-                    IntentProgressRow(label = "Investor Consultations", count = 91, total = 1000, color = AmberOrange)
-                    IntentProgressRow(label = "General Customer Support", count = 25, total = 1000, color = CrimsonRed)
-                }
-            }
-        }
-
-        // Predictive Insights Card
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                // Numerical KPIs
+                item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(
-                            text = "💡 Predictive Business Insights",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Box(
+                        Column(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(AmberOrange.copy(alpha = 0.15f))
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .weight(1f)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .padding(12.dp)
                         ) {
-                            Text("A.I. Enabled", color = AmberOrange, style = MaterialTheme.typography.labelSmall)
+                            Text("Total Inbound Calls", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("${callLogs.size + 1280}", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = CoolBlue)
+                        }
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .padding(12.dp)
+                        ) {
+                            Text("Bookings Formed", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("${bookings.size + 610}", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = EmeraldGreen)
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "• Most Active Day: Tuesday\n• Peak Traffic Hours: 10:00 AM – 1:00 PM\n• High Conversion Focus Areas:\n  1. Mid-Size Commercial Real Estate\n  2. Multi-Practitioner Medical Offices\n  3. Shared Workspace Franchises",
-                        style = MaterialTheme.typography.bodyMedium,
-                        lineHeight = 22.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
-            }
-        }
 
-        // Active AI Operative Recommendation refresh trigger
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
+                // Lead sources custom aesthetic bar chart (CSS/Compose Bar Style)
+                item {
+                    Card(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
                     ) {
-                        Text(
-                            text = "Dynamic Live Operations Audit",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        IconButton(
-                            onClick = { viewModel.refreshAIRecommendations() },
-                            enabled = !viewModel.isLoadingRecommendations
-                        ) {
-                            Icon(
-                                Icons.Default.Refresh,
-                                contentDescription = "Refresh",
-                                tint = CoolBlue
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("Lead Source Breakdown", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            LeadSourceBar(label = "Direct Call Inbound", percentage = 45, color = CoolBlue)
+                            LeadSourceBar(label = "Virtual AI Booking Chat", percentage = 30, color = EmeraldGreen)
+                            LeadSourceBar(label = "Walk-ins Welcome", percentage = 15, color = AmberOrange)
+                            LeadSourceBar(label = "Strategic Referrals", percentage = 10, color = SlateGray700)
+                        }
+                    }
+                }
+
+                // Intent breakdown card
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("Visitor Intent Projections", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            IntentProgressRow(label = "Sales & Space Inquiries", count = 582, total = 1000, color = EmeraldGreen)
+                            IntentProgressRow(label = "Courier Deliveries", count = 302, total = 1000, color = CoolBlue)
+                            IntentProgressRow(label = "Investor Consultations", count = 91, total = 1000, color = AmberOrange)
+                            IntentProgressRow(label = "General Customer Support", count = 25, total = 1000, color = CrimsonRed)
+                        }
+                    }
+                }
+
+                // Predictive Insights Card
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "💡 Predictive Business Insights",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(AmberOrange.copy(alpha = 0.15f))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text("A.I. Enabled", color = AmberOrange, style = MaterialTheme.typography.labelSmall)
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "• Most Active Day: Tuesday\n• Peak Traffic Hours: 10:00 AM – 1:00 PM\n• High Conversion Focus Areas:\n  1. Mid-Size Commercial Real Estate\n  2. Multi-Practitioner Medical Offices\n  3. Shared Workspace Franchises",
+                                style = MaterialTheme.typography.bodyMedium,
+                                lineHeight = 22.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
-                    Text(
-                        text = "Generates actionable operations auditing advice using direct workspace logging patterns.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    if (viewModel.isLoadingRecommendations) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(color = CoolBlue)
+                }
+
+                // Active AI Operative Recommendation refresh trigger
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Dynamic Live Operations Audit",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                IconButton(
+                                    onClick = { viewModel.refreshAIRecommendations() },
+                                    enabled = !viewModel.isLoadingRecommendations
+                                ) {
+                                    Icon(
+                                        Icons.Default.Refresh,
+                                        contentDescription = "Refresh",
+                                        tint = CoolBlue
+                                    )
+                                }
+                            }
+                            Text(
+                                text = "Generates actionable operations auditing advice using direct workspace logging patterns.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            if (viewModel.isLoadingRecommendations) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(80.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(color = CoolBlue)
+                                }
+                            } else {
+                                Text(
+                                    text = viewModel.aiRecommendations,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    lineHeight = 22.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
-                    } else {
+                    }
+                }
+            }
+        } else {
+            // TF LUXURY PRESENTATION SEQUENCE PLAYER DECK
+            TFHyperDeckScreen(viewModel)
+        }
+    }
+}
+
+@Composable
+fun EvolutionDeckView(
+    callLogsCount: Int,
+    meetingsCount: Int,
+    bookingsCount: Int,
+    modifier: Modifier = Modifier
+) {
+    var currentSlideIndex by remember { mutableStateOf(0) }
+    val totalSlides = 5
+
+    val slides = listOf(
+        EvolutionSlide(
+            phase = "PHASE 1",
+            title = "The Traditional Front Desk",
+            subtitle = "The Operational Bottleneck",
+            tagline = "Single-threaded physical presence, high abandonment, and administrative strain.",
+            concept = "Relying 100% on a human receptionist at a desk means single-threaded operations. Missed calls, endless queues, and off-hours voice-mail drops act as heavy business bottlenecks.",
+            bullets = listOf(
+                "High Abandonment Rate: 1 in 3 inbound calls missed during peak lobby hours.",
+                "Off-Hours Invisibility: 0% support after standard business hours (8 PM - 6 AM).",
+                "Administrative Tax: Repeating Wi-Fi codes, parking validation, and floor directions takes 70% of physical capacity."
+            ),
+            impactColor = CrimsonRed,
+            icon = Icons.Default.Warning,
+            metricLabel = "Projected Missed Calls",
+            metricValue = "${(callLogsCount * 0.45).toInt() + 14} missed/day"
+        ),
+        EvolutionSlide(
+            phase = "PHASE 2",
+            title = "The Co-Pilot Assist Screen",
+            subtitle = "The Assisted Operator",
+            tagline = "Digital forms and basic routing support, speed up reception tasks.",
+            concept = "Digital check-in sheets and basic chatbot forms are added, but humans are still manually responsible for triaging information, notifying staff, and booking calendar reservations.",
+            bullets = listOf(
+                "Triage Efficiency: Shared digital spreadsheets simplify tracking.",
+                "Notification Drag: Receptionists still manually search and ping hosts via Slack or phone.",
+                "High Friction: Callers must still wait for a physical desk callback to confirm scheduling details."
+            ),
+            impactColor = AmberOrange,
+            icon = Icons.Default.Build,
+            metricLabel = "Avg Check-In Speed",
+            metricValue = "2.8 minutes"
+        ),
+        EvolutionSlide(
+            phase = "PHASE 3",
+            title = "The Generative AI Intercept",
+            subtitle = "The Multi-Channel Co-Worker",
+            tagline = "Voice & Chat AI answering calls, auto-mapping JSON logs, and answering FAQs.",
+            concept = "Introduction of GenAI voice/chat agents that act as first intercept layers. Phone calls are answered instantly, details are extracted into structured logs, and FAQs are resolved instantly.",
+            bullets = listOf(
+                "0% Missed Calls: Infinite telephone trunk-lines mean every single call gets answered in 1.2 seconds.",
+                "Structured Conversational Parsing: Extracts caller details, sentiment analysis, and urgent tags instantly.",
+                "Autonomous FAQ Clearance: Instant 24/7 resolution of guest Wi-Fi, location, pass, and parking queries."
+            ),
+            impactColor = CoolBlue,
+            icon = Icons.Default.Call,
+            metricLabel = "Resolved Inquiries",
+            metricValue = "${callLogsCount + 82} answered/day"
+        ),
+        EvolutionSlide(
+            phase = "PHASE 4",
+            title = "Autonomous Live Workflows",
+            subtitle = "The Integrated Ecosystem",
+            tagline = "Automated SMS alerts, self-updating DB registries, and predictive audits.",
+            concept = "AI does more than talk—it automates administrative actions. Calls trigger auto-booking. Visitor check-in triggers host SMS notification. Real-time logging enables predictive scheduling analytics.",
+            bullets = listOf(
+                "Connected Automation: High-velocity data pipelines linking phone logs, room bookings, and calendar feeds.",
+                "Zero-Entry Overhead: Database registers visitor and schedules meeting room in Room DB automatically.",
+                "Host Alerts & check-ins: Instant host alert check-ins with clear status updates, minimizing lobby crowd control."
+            ),
+            impactColor = EmeraldGreen,
+            icon = Icons.Default.CheckCircle,
+            metricLabel = "Auto-Processed Records",
+            metricValue = "${meetingsCount + bookingsCount} events/day"
+        ),
+        EvolutionSlide(
+            phase = "PHASE 5",
+            title = "Zero-Touch Hospitality",
+            subtitle = "Infinite Scale Hospitality",
+            tagline = "Focusing 100% of human energy on premium guest experiences.",
+            concept = "The ultimate operational endpoint. Routine administrative workflows run entirely autonomously at infinite scale. Physical hosts are empowered to focus entirely on human-to-human hospitality.",
+            bullets = listOf(
+                "High Value Hospitality: Receptionists become Experience Directors, greeting executive guests and handling complex VIP escalations.",
+                "Infinite Operational Bandwidth: Simultaneously handles 100+ callers or registrants during high-growth seasons.",
+                "Predictive Intelligence: AI system actively audits front-desk operations and recommends peak capacity scheduling parameters."
+            ),
+            impactColor = EmeraldGreen,
+            icon = Icons.Default.Star,
+            metricLabel = "A.I. Operator Efficiency",
+            metricValue = "98.4%"
+        )
+    )
+
+    val currentSlide = slides[currentSlideIndex]
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .testTag("evolution_deck_container")
+    ) {
+        // Slide Navigation Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Evolution Roadmap Deck",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Slide ${currentSlideIndex + 1} of $totalSlides",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Progress Pill indicator row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            for (i in 0 until totalSlides) {
+                val isCurrent = i == currentSlideIndex
+                val widthWeight = if (isCurrent) 2f else 1f
+                val color = if (isCurrent) CoolBlue else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                Box(
+                    modifier = Modifier
+                        .weight(widthWeight)
+                        .height(6.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // The Sliding Card Body
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = BorderStroke(1.5.dp, currentSlide.impactColor.copy(alpha = 0.6f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+                // Header (Badge Indicator + Main Icon)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(currentSlide.impactColor.copy(alpha = 0.15f))
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
                         Text(
-                            text = viewModel.aiRecommendations,
-                            style = MaterialTheme.typography.bodyMedium,
-                            lineHeight = 22.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = currentSlide.phase,
+                            color = currentSlide.impactColor,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .background(currentSlide.impactColor.copy(alpha = 0.12f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = currentSlide.icon,
+                            contentDescription = null,
+                            tint = currentSlide.impactColor,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Title & Subtitle block
+                Text(
+                    text = currentSlide.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = currentSlide.subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = currentSlide.impactColor.copy(alpha = 0.85f)
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Dramatic Tagline Box
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = "“${currentSlide.tagline}”",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Concept explanation Text
+                Text(
+                    text = currentSlide.concept,
+                    style = MaterialTheme.typography.bodyMedium,
+                    lineHeight = 22.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Core Bullets
+                Text(
+                    text = "Key Metrics & Characteristics:",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                currentSlide.bullets.forEach { bullet ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Text(
+                            text = "⚡",
+                            color = currentSlide.impactColor,
+                            modifier = Modifier.padding(end = 8.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = bullet,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 18.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Interactive Dynamic System Mapping Box
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(currentSlide.impactColor.copy(alpha = 0.08f))
+                        .border(1.dp, currentSlide.impactColor.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Live Workspace Metric",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = currentSlide.metricLabel,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(currentSlide.impactColor, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = currentSlide.metricValue,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Slide navigation controller bar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedButton(
+                onClick = { if (currentSlideIndex > 0) currentSlideIndex-- },
+                enabled = currentSlideIndex > 0,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("evolution_prev_slide_btn"),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, if (currentSlideIndex > 0) CoolBlue else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp).padding(end = 4.dp)
+                )
+                Text("Previous Slide")
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Button(
+                onClick = { if (currentSlideIndex < totalSlides - 1) currentSlideIndex++ },
+                enabled = currentSlideIndex < totalSlides - 1,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("evolution_next_slide_btn"),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = CoolBlue)
+            ) {
+                Text("Next Slide")
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp).padding(start = 4.dp)
+                )
             }
         }
     }
 }
+
+data class EvolutionSlide(
+    val phase: String,
+    val title: String,
+    val subtitle: String,
+    val tagline: String,
+    val concept: String,
+    val bullets: List<String>,
+    val impactColor: Color,
+    val icon: ImageVector,
+    val metricLabel: String,
+    val metricValue: String
+)
 
 @Composable
 fun LeadSourceBar(label: String, percentage: Int, color: Color) {
@@ -2368,6 +2984,731 @@ fun TodayAppointmentListItem(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+// ==========================================
+// 6. T&F LUXURY PRESENTATION HANDLER & DRAWER
+// ==========================================
+@Composable
+fun AICallSummaryDrawer(
+    log: CallLog,
+    isLuxuryMode: Boolean,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.85f)
+                .testTag("luxury_ai_drawer"),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isLuxuryMode) ObsidianBlack else MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 16.dp, bottomEnd = 16.dp),
+            border = BorderStroke(
+                1.5.dp,
+                if (isLuxuryMode) EmpireGold else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+            ) {
+                // Header Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "AI INTELLIGENT DEEPLINK SCREEN",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = if (isLuxuryMode) Montserrat else FontFamily.Default,
+                            color = if (isLuxuryMode) EmpireGold else CoolBlue,
+                            letterSpacing = 1.sp
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = log.visitorName,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = if (isLuxuryMode) CormorantGaramond else FontFamily.Default,
+                            color = if (isLuxuryMode) EmpireGold else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(if (isLuxuryMode) EmpireGold.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close drawer",
+                            tint = if (isLuxuryMode) EmpireGold else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = if (isLuxuryMode) EmpireGold.copy(alpha = 0.2f) else MaterialTheme.colorScheme.outlineVariant
+                )
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // KPI Parameters Row 1
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                "COGNITIVE SEMANTIC CLASSIFICATION",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isLuxuryMode) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                previewSubCard(
+                                    modifier = Modifier.weight(1f),
+                                    label = "Intent Class",
+                                    value = "INBOUND SPACE LEASE",
+                                    isLuxury = isLuxuryMode
+                                )
+                                previewSubCard(
+                                    modifier = Modifier.weight(1f),
+                                    label = "Urgency Status",
+                                    value = "CRITICAL ⚡",
+                                    isLuxury = isLuxuryMode
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                previewSubCard(
+                                    modifier = Modifier.weight(1f),
+                                    label = "Detected Sentiment",
+                                    value = "POSITIVE (98.2% confidence)",
+                                    isLuxury = isLuxuryMode
+                                )
+                                previewSubCard(
+                                    modifier = Modifier.weight(1f),
+                                    label = "Verification Seal",
+                                    value = "T&F AUTOMATE VERIFIED ✔",
+                                    isLuxury = isLuxuryMode
+                                )
+                            }
+                        }
+                    }
+
+                    // Conversation Summary
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isLuxuryMode) ObsidianCard else MaterialTheme.colorScheme.surfaceVariant
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(
+                                1.dp,
+                                if (isLuxuryMode) EmpireGold.copy(alpha = 0.2f) else Color.Transparent
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(14.dp)) {
+                                Text(
+                                    text = "EXECUTIVE BRIEF",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isLuxuryMode) EmpireGold else MaterialTheme.colorScheme.primary,
+                                    letterSpacing = 1.sp
+                                )
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = "Sarah Lee states interest in leasing the dual-suite workspace workspace area. Conversation lasted 145 seconds with perfect intent parsing and zero fallback events. Automated response completed booking lock and sent SMS validation link successfully.",
+                                    fontSize = 13.sp,
+                                    lineHeight = 18.sp,
+                                    fontFamily = if (isLuxuryMode) Montserrat else FontFamily.Default,
+                                    color = if (isLuxuryMode) SandPlated else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+
+                    // Dialog audio transcript!
+                    item {
+                        Text(
+                            text = "AUDIO REAL-TIME SYSTEM TRANSCRIPT",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isLuxuryMode) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp
+                        )
+                    }
+
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            TranscriptBubble(
+                                speaker = "Sarah Lee (Visitor)",
+                                time = "11:05:01 AM",
+                                text = "Hi, I'm calling from Summit Properties. We are looking to book a dual commercial workspace desk suite for the investor conference at conference Room A next Wednesday. Is that something we can secure with you today?",
+                                isVisitor = true,
+                                isLuxury = isLuxuryMode
+                            )
+
+                            TranscriptBubble(
+                                speaker = "T&F Front-Desk AI",
+                                time = "11:05:14 AM",
+                                text = "Absolutey, Ms. Lee! I see conference Room A has open reservation availability next Wednesday. I can lock in that investor suite booking for your team under the executive summit pricing structure ($12,480 total booking value). Shall I secure this list slot now?",
+                                isVisitor = false,
+                                isLuxury = isLuxuryMode
+                            )
+
+                            TranscriptBubble(
+                                speaker = "Sarah Lee (Visitor)",
+                                time = "11:05:28 AM",
+                                text = "Oh perfect, that matches our conference outline. Go ahead and confirm that. I will authorize Summit Properties to process the credit invoice directly. Thank you!",
+                                isVisitor = true,
+                                isLuxury = isLuxuryMode
+                            )
+
+                            TranscriptBubble(
+                                speaker = "T&F Front-Desk AI",
+                                time = "11:05:40 AM",
+                                text = "Secure slot complete! Summit Properties dual executive suite booking is locked and verified. I have transmitted the instant SMS payment and calendar reminder confirmation directly to your phone. We look forward to welcome you next Wednesday!",
+                                isVisitor = false,
+                                isLuxury = isLuxuryMode
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun previewSubCard(modifier: Modifier, label: String, value: String, isLuxury: Boolean) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isLuxury) ObsidianCard else MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(
+            1.dp,
+            if (isLuxury) EmpireGold.copy(alpha = 0.15f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+        )
+    ) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(
+                text = label.uppercase(),
+                fontSize = 8.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun TranscriptBubble(speaker: String, time: String, text: String, isVisitor: Boolean, isLuxury: Boolean) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = if (isVisitor) Alignment.Start else Alignment.End
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = speaker,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default
+            )
+            Text(
+                text = time,
+                fontSize = 9.sp,
+                color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
+                        bottomStart = if (isVisitor) 2.dp else 12.dp,
+                        bottomEnd = if (isVisitor) 12.dp else 2.dp
+                    )
+                )
+                .background(
+                    if (isLuxury) {
+                        if (isVisitor) ObsidianCard else EmpireGold.copy(alpha = 0.08f)
+                    } else {
+                        if (isVisitor) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+                    }
+                )
+                .border(
+                    1.dp,
+                    if (isLuxury) {
+                        if (isVisitor) EmpireGold.copy(alpha = 0.15f) else EmpireGold.copy(alpha = 0.40f)
+                    } else {
+                        Color.Transparent
+                    },
+                    shape = RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
+                        bottomStart = if (isVisitor) 2.dp else 12.dp,
+                        bottomEnd = if (isVisitor) 12.dp else 2.dp
+                    )
+                )
+                .padding(12.dp)
+        ) {
+            Text(
+                text = text,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) SandPlated else MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun ExecutiveKpiStrip(isLuxury: Boolean) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("executive_kpi_card"),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isLuxury) ObsidianCard else MaterialTheme.colorScheme.surfaceVariant
+        ),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(
+            1.5.dp,
+            if (isLuxury) EmpireGold.copy(alpha = 0.6f) else MaterialTheme.colorScheme.outline
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "EXECUTIVE KPI AUDITING REPORT",
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                letterSpacing = 1.5.sp
+            )
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                KpiTile(
+                    modifier = Modifier.weight(1f),
+                    label = "Automation Rate",
+                    value = "87%",
+                    isLuxury = isLuxury,
+                    accentColor = EmeraldGreen
+                )
+                KpiTile(
+                    modifier = Modifier.weight(1f),
+                    label = "Bookings Formed",
+                    value = "613",
+                    isLuxury = isLuxury,
+                    accentColor = CoolBlue
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                KpiTile(
+                    modifier = Modifier.weight(1f),
+                    label = "Inbound Calls Saved",
+                    value = "1,285",
+                    isLuxury = isLuxury,
+                    accentColor = AmberOrange
+                )
+                KpiTile(
+                    modifier = Modifier.weight(1f),
+                    label = "Estimated Recovered Value",
+                    value = "$84,200",
+                    isLuxury = isLuxury,
+                    accentColor = EmpireGold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun KpiTile(modifier: Modifier, label: String, value: String, isLuxury: Boolean, accentColor: Color) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isLuxury) ObsidianBlack else MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(
+            1.dp,
+            if (isLuxury) EmpireGold.copy(alpha = 0.2f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+        )
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = label.uppercase(),
+                fontSize = 8.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = value,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = if (isLuxury) BebasNeue else FontFamily.Default,
+                color = if (isLuxury) accentColor else MaterialTheme.colorScheme.onSurface,
+                lineHeight = 26.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun FinalBrandFrame(isLuxury: Boolean) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("brand_frame_card"),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isLuxury) ObsidianBlack else MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(
+            2.dp,
+            if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "T&F AUTOMATE",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = if (isLuxury) CormorantGaramond else FontFamily.Default,
+                color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                letterSpacing = 2.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Box(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(1.dp)
+                    .background(if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Powered by T&F Automate",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) SandPlated else MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = "The Autonomous Intelligent Front Desk of Tomorrow",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Light,
+                fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant,
+                letterSpacing = 1.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun TFHyperDeckScreen(viewModel: FrontDeskViewModel) {
+    var hyperSlideIndex by remember { mutableStateOf(0) }
+    val totalSlides = 4
+    val isLuxury = viewModel.isLuxuryThemeActive
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            when (hyperSlideIndex) {
+                0 -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "SEQUENCE FRAME 1: DASHBOARD HERO",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp
+                        )
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = if (isLuxury) ObsidianCard else MaterialTheme.colorScheme.surfaceVariant),
+                            border = BorderStroke(1.5.dp, if (isLuxury) EmpireGold else Color.Transparent)
+                        ) {
+                            Column(modifier = Modifier.padding(14.dp)) {
+                                Text(
+                                    "Total Revenue Recovered",
+                                    fontSize = 11.sp,
+                                    fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                                    color = if (isLuxury) SandPlated else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    "$12,480",
+                                    fontSize = 38.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = if (isLuxury) BebasNeue else FontFamily.Default,
+                                    color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Autonomous receptionist prevented missed leads during off-hours.",
+                                    fontSize = 10.sp,
+                                    fontFamily = if (isLuxury) Montserrat else FontFamily.Default,
+                                    color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+
+                                Spacer(modifier = Modifier.height(12.dp))
+                                HorizontalDivider(color = if (isLuxury) EmpireGold.copy(alpha = 0.2f) else MaterialTheme.colorScheme.outlineVariant)
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text("Calls Logged", fontSize = 9.sp, color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text("1,285 Today", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.onSurface)
+                                    }
+                                    Column {
+                                        Text("Check-In Rate", fontSize = 9.sp, color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text("87% Active", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.onSurface)
+                                    }
+                                    Column {
+                                        Text("Upcoming", fontSize = 9.sp, color = if (isLuxury) ObsidianMutedText else MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text("613 Booked", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.onSurface)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                1 -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "SEQUENCE FRAME 2: AI CALL SUMMARY DRAWER",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp
+                        )
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = if (isLuxury) ObsidianBlack else MaterialTheme.colorScheme.surface),
+                            border = BorderStroke(1.5.dp, if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary)
+                        ) {
+                            Column(modifier = Modifier.padding(14.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text("EXECUTIVE ANALYST VIEW", fontSize = 8.sp, color = if (isLuxury) EmpireGold else CoolBlue)
+                                        Text("Sarah Lee (Summit Properties)", fontSize = 16.sp, fontWeight = FontWeight.Bold, fontFamily = if (isLuxury) CormorantGaramond else FontFamily.Default, color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.onSurface)
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(EmeraldGreen.copy(alpha = 0.12f))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Text("Positive Sentiment", fontSize = 9.sp, color = EmeraldGreen, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Inbound Call Summary Drawer Details:", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (isLuxury) SandPlated else MaterialTheme.colorScheme.onSurface)
+                                Text("• Intent Class: Booking Desk Lease\n• Urgency: High ⚡ (98% Parsing Confidence)\n• Follow up advice: Sent confirmation calendar link via SMS successfully.", fontSize = 11.sp, color = if (isLuxury) SandPlated.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = 16.sp)
+
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Button(
+                                    onClick = { },
+                                    colors = ButtonDefaults.buttonColors(containerColor = if (isLuxury) EmpireGold else CoolBlue),
+                                    modifier = Modifier.fillMaxWidth().height(32.dp),
+                                    shape = RoundedCornerShape(6.dp),
+                                    contentPadding = PaddingValues(0.dp)
+                                ) {
+                                    Text("✨ LAUNCH DRAWER FROM CALLS LOG PAGE", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = if (isLuxury) ObsidianBlack else Color.White)
+                                }
+                            }
+                        }
+                    }
+                }
+                2 -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "SEQUENCE FRAME 3: EXECUTIVE KPI STRIP",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp
+                        )
+                        ExecutiveKpiStrip(isLuxury = isLuxury)
+                    }
+                }
+                3 -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "SEQUENCE FRAME 4: FINAL BRAND FRAME",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isLuxury) EmpireGold else MaterialTheme.colorScheme.primary,
+                            letterSpacing = 1.sp
+                        )
+                        FinalBrandFrame(isLuxury = isLuxury)
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = { if (hyperSlideIndex > 0) hyperSlideIndex-- },
+                enabled = hyperSlideIndex > 0,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isLuxury) EmpireGold else CoolBlue,
+                    contentColor = if (isLuxury) ObsidianBlack else Color.White
+                ),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.ArrowBack, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Previous Frame", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                (0 until totalSlides).forEach { idx ->
+                    Box(
+                        modifier = Modifier
+                            .size(if (idx == hyperSlideIndex) 10.dp else 6.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (idx == hyperSlideIndex) {
+                                    if (isLuxury) EmpireGold else CoolBlue
+                                } else {
+                                    if (isLuxury) EmpireGold.copy(alpha = 0.3f) else MaterialTheme.colorScheme.outlineVariant
+                                }
+                            )
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Button(
+                onClick = { if (hyperSlideIndex < totalSlides - 1) hyperSlideIndex++ },
+                enabled = hyperSlideIndex < totalSlides - 1,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isLuxury) EmpireGold else CoolBlue,
+                    contentColor = if (isLuxury) ObsidianBlack else Color.White
+                ),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Next Frame", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.width(6.dp))
+                Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
             }
         }
     }

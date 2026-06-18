@@ -37,6 +37,32 @@ private val LightColorScheme = lightColorScheme(
     error = CrimsonRed
 )
 
+private val LuxuryColorScheme = darkColorScheme(
+    primary = EmpireGold,
+    onPrimary = ObsidianBlack,
+    secondary = EmpireGoldMuted,
+    onSecondary = SandPlated,
+    background = ObsidianBlack,
+    onBackground = SandPlated,
+    surface = ObsidianCard,
+    onSurface = SandPlated,
+    surfaceVariant = ObsidianCardAccent,
+    onSurfaceVariant = ObsidianMutedText,
+    outline = ObsidianCardAccent,
+    error = CrimsonRed
+)
+
+@Composable
+fun TFAugmentedTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = LuxuryColorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
 @Composable
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
