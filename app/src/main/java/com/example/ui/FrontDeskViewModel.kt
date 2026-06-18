@@ -46,6 +46,54 @@ class FrontDeskViewModel(application: Application) : AndroidViewModel(applicatio
     var isLoadingRecommendations by mutableStateOf(false)
     var isLuxuryThemeActive by mutableStateOf(true)
 
+    // --- Functional Settings & Enterprise Additions States ---
+    var receptionistGreeting by mutableStateOf("Hello! Welcome to our office smart booking platform. Who are you looking to meet, and what is your company name?")
+    var smsAlertsEnabled by mutableStateOf(true)
+    var voiceReceptionEnabled by mutableStateOf(false)
+    var liveAuditingEnabled by mutableStateOf(true)
+    var bypassVerification by mutableStateOf(false)
+
+    // Emergency Keywords List
+    var emergencyKeywords by mutableStateOf(listOf("urgent", "fire", "leak", "security", "immediate", "medical"))
+    var newKeywordInput by mutableStateOf("")
+
+    // Enterprise Additions:
+    var selectedLocation by mutableStateOf("New York Plaza (Main)")
+    var teamMembers by mutableStateOf(listOf("Terrence Franklin", "Sarah Johnston", "Marcus Miller", "Amelia Vance"))
+    var newTeamMemberInput by mutableStateOf("")
+    var callRoutingMode by mutableStateOf("Direct to Host") // Options: "Direct to Host", "Sequenced Ringing", "Interactive Voice Menu"
+
+    // Integrations Toggles
+    var googleCalendarIntegration by mutableStateOf(true)
+    var salesforceIntegration by mutableStateOf(false)
+    var hubspotIntegration by mutableStateOf(false)
+    var slackIntegration by mutableStateOf(true)
+
+    // Confirmation State
+    var showSaveConfirmation by mutableStateOf(false)
+
+    fun addEmergencyKeyword(keyword: String) {
+        val clean = keyword.trim().lowercase()
+        if (clean.isNotEmpty() && !emergencyKeywords.contains(clean)) {
+            emergencyKeywords = emergencyKeywords + clean
+        }
+    }
+
+    fun removeEmergencyKeyword(keyword: String) {
+        emergencyKeywords = emergencyKeywords.filter { it != keyword }
+    }
+
+    fun addTeamMember(name: String) {
+        val clean = name.trim()
+        if (clean.isNotEmpty() && !teamMembers.contains(clean)) {
+            teamMembers = teamMembers + clean
+        }
+    }
+
+    fun removeTeamMember(name: String) {
+        teamMembers = teamMembers.filter { it != name }
+    }
+
     // --- Add Operations Dialog/Expanded States ---
     var showAddMeetingDialog by mutableStateOf(false)
     var showAddBookingDialog by mutableStateOf(false)
